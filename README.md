@@ -364,4 +364,42 @@ c46840dcb134
 da24562440dd
 
 ```
+### app containerization 
+### image building process
 
+<img src="imgbuild.png">
+
+### building first image 
+
+```
+ docker build -t  ashupython:v1  .
+```
+ 
+ ### creating container 
+ 
+ 
+ ```
+ docker  run -it -d  --name ashupc1 ashupython:v1  
+956ca3b2a422a1e89c907168ae89d0037a40376ce53e4f15e5031e95acb1d911
+[test@ip-172-31-93-168 pythondemo]$ docker ps
+CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS         PORTS     NAMES
+956ca3b2a422   ashupython:v1   "python3 /code/oracl…"   3 seconds ago   Up 2 seconds             ashupc1
+ 
+ ```
+ 
+ ### checking resources by python container 
+ 
+ ```
+ [test@ip-172-31-93-168 pythondemo]$ docker  stats ashupc1
+ 
+ CONTAINER ID   NAME      CPU %     MEM USAGE / LIMIT     MEM %     NET I/O     BLOCK I/O    PIDS
+956ca3b2a422   ashupc1   0.00%     3.789MiB / 7.689GiB   0.05%     780B / 0B   4.1kB / 0B   1
+^C
+
+
+```
+
+
+
+
+ 
