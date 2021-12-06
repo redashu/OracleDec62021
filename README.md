@@ -223,4 +223,113 @@ Status: Downloaded newer image for container-registry.oracle.com/java/openjdk:la
 
 <img src="dst.png">
 
+## Intro to containers 
+
+###  container creation 
+
+<img src="cc.png">
+
+### creating container 
+
+<img src="createc.png">
+
+### creating container and listing it 
+
+```
+docker  run   --name  ashuc1  -d   alpine:latest   ping localhost 
+bb5324a16d48ae7cc5670f92a18a637fd78eee7644de9c39b0c33e383afc029b
+[test@ip-172-31-93-168 ~]$ 
+[test@ip-172-31-93-168 ~]$ 
+[test@ip-172-31-93-168 ~]$ 
+[test@ip-172-31-93-168 ~]$ docker  ps
+CONTAINER ID   IMAGE           COMMAND            CREATED          STATUS          PORTS     NAMES
+0276fde63c1b   alpine:latest   "ping localhost"   22 seconds ago   Up 21 seconds             juhi_alpine
+bb5324a16d48   alpine:latest   "ping localhost"   26 seconds ago   Up 24 seconds             ashuc1
+[test@ip-172-31-93-168 ~]$ 
+
+```
+
+### checking output of container process 
+
+```
+ docker  logs   ashuc1  
+PING localhost (127.0.0.1): 56 data bytes
+64 bytes from 127.0.0.1: seq=0 ttl=255 time=0.038 ms
+64 bytes from 127.0.0.1: seq=1 ttl=255 time=0.048 ms
+64 bytes from 127.0.0.1: seq=2 ttl=255 time=0.056 ms
+64 bytes from 127.0.0.1: seq=3 ttl=255 time=0.068 ms
+
+==== for Live output 
+
+ docker  logs  -f  ashuc1  
+PING localhost (127.0.0.1): 56 data bytes
+64 bytes from 127.0.0.1: seq=0 ttl=255 time=0.038 ms
+64 bytes from 127.0.0.1: seq=1 ttl=255 time=0.048 ms
+64 bytes from 127.0.0.1: seq=2 ttl=255 time=0.056 ms
+64 bytes from 127.0.0.1: seq=3 ttl=255 time=0.068 ms
+
+```
+
+### to stop a running container 
+
+```
+docker  stop  ashuc1 
+ashuc1
+
+```
+
+### start an existing container 
+
+```
+docker  start  ashuc1
+ashuc1
+[test@ip-172-31-93-168 ~]$ docker  ps
+CONTAINER ID   IMAGE           COMMAND            CREATED         STATUS         PORTS     NAMES
+faa9e721844a   alpine:latest   "ping localhost"   4 minutes ago   Up 4 minutes             sunil1stc
+2518e90e5fa8   alpine:latest   "ping localhost"   5 minutes ago   Up 5 minutes             sneha2
+9c814dc8a0fa   alpine:latest   "ping localhost"   5 minutes ago   Up 5 minutes             shubhamc
+c46840dcb134   alpine:latest   "ping localhost"   6 minutes ago   Up 6 minutes             chetan06
+605cdaeae70b   alpine:latest   "ping localhost"   7 minutes ago   Up 7 minutes             aiswarya_alpine
+bb5324a16d48   alpine:latest   "ping localhost"   9 minutes ago   Up 2 seconds             ashuc1
+
+```
+
+### stop container immediately 
+
+```
+ docker  kill  ashuc1
+ashuc1
+[test@ip-172-31-93-168 ~]$ docker  start  ashuc1
+ashuc1
+[test@ip-172-31-93-168 ~]$ 
+
+```
+
+### Container child process 
+
+```
+
+[test@ip-172-31-93-168 ~]$ docker  exec    -it   ashuc1   sh 
+/ # 
+/ # 
+/ # cat  /etc/os-release 
+NAME="Alpine Linux"
+ID=alpine
+VERSION_ID=3.15.0
+PRETTY_NAME="Alpine Linux v3.15"
+HOME_URL="https://alpinelinux.org/"
+BUG_REPORT_URL="https://bugs.alpinelinux.org/"
+/ # uname  -r
+4.14.252-195.483.amzn2.x86_64
+/ # exit
+
+```
+
+### remove a non running container 
+
+```
+ docker  rm ashuc1
+ashuc1
+
+```
 
