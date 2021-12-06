@@ -399,7 +399,38 @@ CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS  
 
 ```
 
+### Task 2 for alpine python image 
 
+### Dockerfile 
 
+```
+FROM alpine
+RUN  apk add python3  
+# installer of alpine linux 
+RUN mkdir /code1 
+ADD https://raw.githubusercontent.com/redashu/pythonLang/main/while.py /code1/ 
+# copy and add both are same but add can take data from URL as well
+ENTRYPOINT ["python3","/code1/while.py"]
+# CMD and Entrypoint both are same except 1 diff 
 
+```
+
+### build image 
+
+```
+ docker build -t  ashualp:pycodev1  -f  alpine.dockerfile  . 
+Sending build context to Docker daemon  4.096kB
+Step 1/5 : FROM alpine
+ ---> c059bfaa849c
+Step 2/5 : RUN  apk add python3
+ ---> Running in b7a9339b8dde
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.15/main/x86_64/APKINDEX.tar.gz
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.15/community/x86_64/APKINDEX.tar.gz
+(1/13) Installing libbz2 (1.0.8-r1)
+(2/13) Installing expat (2.4.1-r0)
+(3/13) Installing libffi (3.4.2-r1)
+(4/13) Installing gdbm (1.22-r0)
+(5/13) Installing xz-libs (5.2.5-r0)
+
+```
  
