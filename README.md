@@ -333,3 +333,35 @@ ashuc1
 
 ```
 
+### kill all running containers 
+
+```
+docker kill  $(docker  ps  -q)
+7584309d69df
+65aa07d0eb05
+2518e90e5fa8
+9c814dc8a0fa
+c46840dcb134
+da24562440dd
+eddc0f1cb512
+605cdaeae70b
+6f68969ae03a
+0276fde63c1b
+
+```
+
+### remove all non running containers
+
+```
+ docker  rm $(docker  ps -aq)
+51676645edb2
+7584309d69df
+65aa07d0eb05
+faa9e721844a
+2518e90e5fa8
+9c814dc8a0fa
+c46840dcb134
+da24562440dd
+
+```
+
