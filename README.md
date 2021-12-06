@@ -129,4 +129,98 @@ d, status=0/SUCCESS)
     
  ```
  
+ ### Docker lab setup 
  
+ <img src="lab.png">
+ 
+### Docker ENgine / server 
+
+<img src="dengine.png">
+
+### Docker client and server 
+
+<img src="server.png">
+
+###  Container required docker images 
+
+<img src="dimg.png">
+
+### Imgae registry like Docker hub 
+
+### Docker client operations 
+
+### checking local server images 
+
+```
+ docker   images
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+[test@ip-172-31-93-168 ~]$ 
+
+
+```
+
+### pulling image from docker hub to docker engine server 
+
+```
+$ docker   images
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+[test@ip-172-31-93-168 ~]$ docker  pull  openjdk 
+Using default tag: latest
+latest: Pulling from library/openjdk
+28587b6e6475: Pull complete 
+b1655352c888: Pull complete 
+1f9646f00e96: Pull complete 
+Digest: sha256:0e5ae79482731eef1526afb4e3a42e62b38142681c5752a944ff4236da979648
+Status: Downloaded newer image for openjdk:latest
+docker.io/library/openjdk:latest
+[test@ip-172-31-93-168 ~]$ 
+[test@ip-172-31-93-168 ~]$ docker   images
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+openjdk      latest    1b3756d6df61   2 weeks ago   471MB
+
+```
+
+### final docker images 
+
+```
+docker  images
+REPOSITORY    TAG       IMAGE ID       CREATED       SIZE
+mysql         latest    bbf6571db497   3 days ago    516MB
+alpine        latest    c059bfaa849c   11 days ago   5.59MB
+openjdk       latest    1b3756d6df61   2 weeks ago   471MB
+oraclelinux   8.5       fa4253e97227   2 weeks ago   235MB
+
+```
+
+### pulling images from QYay 
+
+```
+$ docker pull quay.io/bitnami/tomcat  
+Using default tag: latest
+latest: Pulling from bitnami/tomcat
+1d7019cad1df: Pull complete 
+a30ebf93a11a: Pull complete 
+20a11b4e2b3b: Pull complete 
+8c1997a505fe: Pull complete 
+65fdfb1b53db: Pull complete 
+
+```
+
+### pulling from non cloud oralce public registry 
+
+```
+ docker pull container-registry.oracle.com/java/openjdk:latest
+latest: Pulling from java/openjdk
+0b3f7bc5b3d7: Pull complete 
+7ba4be1f9aef: Pull complete 
+793b9263010a: Pull complete 
+Digest: sha256:294490452d9030fdcb85a9ccd74e48bdacca8b028d022dc6700b56c82d746bed
+Status: Downloaded newer image for container-registry.oracle.com/java/openjdk:latest
+
+```
+
+### on the docker server side images storage location 
+
+<img src="dst.png">
+
+
