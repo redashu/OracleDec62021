@@ -433,4 +433,14 @@ fetch https://dl-cdn.alpinelinux.org/alpine/v3.15/community/x86_64/APKINDEX.tar.
 (5/13) Installing xz-libs (5.2.5-r0)
 
 ```
+ ### Restart policy in Docker 
+ 
+ <img src="restart.png">
+ 
+ ### a continer with restart policy always 
+ 
+ ```
+ docker run -tid --name ashucc2 --restart  always   ashualp:pycodev1
+ 
+ ```
  
