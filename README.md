@@ -168,7 +168,266 @@ bash-4.4#
 
 ```
 
+## Docker Networking 
+
+
+<img src="dnet1.png">
+
+### checking container Ip address 
+
+```
+ docker exec -it  ashuc1  sh 
+/ # ifconfig 
+eth0      Link encap:Ethernet  HWaddr 02:42:AC:11:00:02  
+          inet addr:172.17.0.2  Bcast:172.17.255.255  Mask:255.255.0.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:12 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:960 (960.0 B)  TX bytes:0 (0.0 B)
+          
+          
+```
+
+### json formating to get IPaddress 
+
+```
+docker  inspect  ashuc1 --format='{{.Id}}'
+34ec23953ccb5d11ca8c30c488d3ff336d4064c5519090d219df6f88fb359673
+[test@ip-172-31-93-168 ashu_images]$ 
+[test@ip-172-31-93-168 ashu_images]$ docker  inspect  ashuc1 --format='{{.State.Status}}'
+running
+[test@ip-172-31-93-168 ashu_images]$ docker  inspect  ashuc1 --format='{{.HostConfig.RestartPolicy.Name}}'
+no
+[test@ip-172-31-93-168 ashu_images]$ docker  inspect  ashuc1 --format='{{.NetworkSettings.IPAddress}}'
+172.17.0.2
+
+```
+
+### Due to NAT on Host machine each container can go outside host 
+
+```
+docker  exec -it  ashuc1  sh 
+/ # 
+/ # ping google.com 
+PING google.com (172.217.164.142): 56 data bytes
+64 bytes from 172.217.164.142: seq=0 ttl=110 time=0.508 ms
+64 bytes from 172.217.164.142: seq=1 ttl=110 time=0.572 ms
+64 bytes from 172.217.164.142: seq=2 ttl=110 time=0.560 ms
+^C
+--- google.com ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 0.508/0.546/0.572 ms
+/ # exit
+
+```
+
+### 
+
+<img src="nat.png">
+
+### Docker Network inspect 
+
+```
+docker network  inspect  f78361292230  
+[
+    {
+        "Name": "bridge",
+        "Id": "f7836129223025b135ddf3429fec0ae422c5cddd0f19507af6a19218e60bd1f7",
+        "Created": "2021-12-07T04:16:15.52930862Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16",
+                    "Gateway": "172.17.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "0c811b595b3f0f6633c5c83cf3b18add67db27c02b8f4266faf8ee1416b8feb6": {
+                "Name": "shubhpc1",
+                "EndpointID": "ec67c2e8a351936cbd75f10bda44415430d58a83c91138f5d0962b3326fa2cc7",
+                "MacAddress": "02:42:ac:11:00:0a",
+                "IPv4Address": "172.17.0.10/16",
+                "IPv6Address": ""
+            },
+            "0f01d4ecf4b6d5a41570c27492de818a54028ef3296e3ae67bd69cf1fcf30dfb": {
+                "Name": "stupefied_jones",
+                "EndpointID": "97c493906f3fecc0cd356aa365d1c16b3d88cba6687e711fc489204340ef235a",
+                "MacAddress": "02:42:ac:11:00:12",
+                "IPv4Address": "172.17.0.18/16",
+                "IPv6Address": ""
+            },
+            "0f581a1090458a48b7dd1a3b36db3ba085ca0c0a3cbc4257aaa2e789ab5caf8a": {
+                "Name": "PRAVc1",
+                "EndpointID": "05dd970f306d6b5bff89992f2e24350a972f4ae79609cc295efb986f844cd9bf",
+                "MacAddress": "02:42:ac:11:00:04",
+                "IPv4Address": "172.17.0.4/16",
+                "IPv6Address": ""
+            },
+            "172a32a3484228fc0c569c3e0967c061cc776e65347bb57a71ef9522dce72039": {
+                "Name": "prabhatc1",
+                "EndpointID": "c237270b3627ce689c1aba5bd57578149a3be9729326fe31294ea5d8ce4372e2",
+                "MacAddress": "02:42:ac:11:00:05",
+                "IPv4Address": "172.17.0.5/16",
+                "IPv6Address": ""
+            },
+            "19bc36be978ce6fa0cb39bb5bdf1a9eb0bc8e93d8a325cefd2b83a1c3a2c232a": {
+                "Name": "venunwk1",
+                "EndpointID": "32b338c97a1b36c754689f2b63655feb8a585e8d41c80f46966eec3fcf23df93",
+                "MacAddress": "02:42:ac:11:00:06",
+                "IPv4Address": "172.17.0.6/16",
+                "IPv6Address": ""
+            },
+            "1e581ea4e74c789ace3c8ef62d91b4856387f933e276bb2fccb62191f3af4ce0": {
+                "Name": "sureshd1",
+                "EndpointID": "5f4710639c5526d4ad18f6e423768ed4f1143c6da9e43ad031f19e962ebd3cd8",
+                "MacAddress": "02:42:ac:11:00:09",
+                "IPv4Address": "172.17.0.9/16",
+                "IPv6Address": ""
+            },
+            "2eb06186794ea88d7927ffdbcadfe1be144c8864fd28ccd3834e5361df28cc60": {
+                "Name": "rahulc1",
+                "EndpointID": "9f53eda9ceeca919c362ea70c4a0ccb8e42d2390013f3a7a4e04354a46b3ca20",
+                "MacAddress": "02:42:ac:11:00:07",
+                "IPv4Address": "172.17.0.7/16",
+                "IPv6Address": ""
+            },
+            "34ec23953ccb5d11ca8c30c488d3ff336d4064c5519090d219df6f88fb359673": {
+                "Name": "ashuc1",
+                "EndpointID": "c0f7bcc46ed6bcbd375c449031e481b572d96f81eaf9eaefa222334aab31e57f",
+                "MacAddress": "02:42:ac:11:00:02",
+                "IPv4Address": "172.17.0.2/16",
+                "IPv6Address": ""
+            },
+            "4bee5070ad1d279743a89188221faaa8feac2076ac34365f3dd6b3802d8764a1": {
+                "Name": "sneha1",
+                "EndpointID": "74740da1b6303789e05146690482c73324b43fa26eb0dad759e290fff0a06f04",
+                "MacAddress": "02:42:ac:11:00:0b",
+                "IPv4Address": "172.17.0.11/16",
+                "IPv6Address": ""
+            },
+            "70f74efc96599f1e118e9473728b1c5de2a70b1d17c3b6a7b12e40ba53d84591": {
+                "Name": "sbandem1",
+                "EndpointID": "3365f5be9bcc66608377ad38d06a37f45916b75e266816583987d938d7e7774e",
+                "MacAddress": "02:42:ac:11:00:0c",
+                "IPv4Address": "172.17.0.12/16",
+                "IPv6Address": ""
+            },
+            "754066d3b4147612fc6b10be48590f55aed3588065a4f4c35b0a683e964ecd0b": {
+                "Name": "epic_pare",
+                "EndpointID": "973b4b9aa9658fadc159da0a2295ab7c919e5c893811f540443d3a2ffd9186c4",
+                "MacAddress": "02:42:ac:11:00:11",
+                "IPv4Address": "172.17.0.17/16",
+                "IPv6Address": ""
+            },
+            "7c22ee7be297a6623b33044b28709a96dcb6b8900a870733ab04843878b60baa": {
+                "Name": "prasun",
+                "EndpointID": "84fd9abcdb786b34f0a10a49d7338f656418f18d912ad5570632b2cd4008d4d3",
+                "MacAddress": "02:42:ac:11:00:10",
+                "IPv4Address": "172.17.0.16/16",
+                "IPv6Address": ""
+            },
+            "7f7997b835aa847d433892ffe9d1038f61bb462b6f915f0aafc2a83ee08b7286": {
+                "Name": "shipranet",
+                "EndpointID": "ed39b863acb48e00e63d6b0b42a3be3a11c580fc3dd1089d7709672c25d98d0d",
+                "MacAddress": "02:42:ac:11:00:0d",
+                "IPv4Address": "172.17.0.13/16",
+                "IPv6Address": ""
+                
+                
+```
+
+### Docker Host Port forwarding 
+
+<img src="portf.png">
+
+
+### port forwarding demo 
+
+```
+git  clone  https://github.com/yenchiah/project-website-template
+
+```
+
+### Dockerfile 
+```
+FROM oraclelinux:8.5 
+LABEL name="ashutoshh"
+RUN  yum install httpd -y 
+COPY . /var/www/html/ 
+# copy all the data to httpd document root 
+# COPY or ADD will check for .dockerignore first 
+CMD ["httpd","-DFOREGROUND"]
+
+```
+
+# to start web server 
 
 
 
+### .dockerignore 
 
+```
+Dockerfile
+.dockerignore
+.gitignore
+.git
+*.md
+LICENSE
+
+
+```
+
+### Image build 
+
+
+```
+
+ ls
+css         embedding.html  img         js       menu.html  vid
+Dockerfile  empty.html      index.html  LICENSE  README.md  widgets.html
+[test@ip-172-31-93-168 project-website-template]$ docker  build -t dockerashu/oracleindia:webapp1 . 
+Sending build context to Docker daemon  1.004MB
+Step 1/5 : FROM oraclelinux:8.5
+ ---> fa4253e97227
+Step 2/5 : LABEL name="ashutoshh"
+ ---> Using cache
+ ---> 2f5b0a3d82a0
+Step 3/5 : RUN  yum install httpd -y
+ ---> Running in ceaf44c1d430
+Oracle Linux 8 BaseOS Latest (x86_64)            75 MB/s |  40 MB     00:00    
+Oracle Linux 8 Application Stream (x86_64)       43 MB/s |  31 MB     00:00    
+Last metadata expiration check: 0:00:14 ago on Tue Dec  7 09:27:24 2021.
+Dependencies resolved.
+==================================================================================================
+ Package              Arch    Version                                     Repository          Size
+=============================================================
+
+```
+
+### Creating container 
+
+```
+docker  run -d  --name ashuwebc1  -p  1111:80  dockerashu/oracleindia:webapp1
+69715ebc288e64cb3a1ac202ed0ac39c21f37b2747bcd0050dc4f91d8ac6c0a5
+[test@ip-172-31-93-168 project-website-template]$ 
+[test@ip-172-31-93-168 project-website-template]$ 
+[test@ip-172-31-93-168 project-website-template]$ docker  ps
+CONTAINER ID   IMAGE                            COMMAND                CREATED         STATUS         PORTS                                   NAMES
+69715ebc288e   dockerashu/oracleindia:webapp1   "httpd -DFOREGROUND"   3 seconds ago   Up 2 seconds   0.0.0.0:1111->80/tcp, :::1111->80/tcp   ashuwebc1
+[test@ip-172-31-93-168 project-website-template]$ 
+
+```
