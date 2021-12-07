@@ -431,3 +431,86 @@ CONTAINER ID   IMAGE                            COMMAND                CREATED  
 [test@ip-172-31-93-168 project-website-template]$ 
 
 ```
+
+### Custom bride need 
+
+<img src="brx.png">
+
+### 
+
+```
+docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+f78361292230   bridge    bridge    local
+8731d1a03487   host      host      local
+1413ba13fd3d   none      null      local
+
+```
+
+### creating bridge 
+
+```
+ docker  network create  ashubr1 
+docker  network create  ashubr2  --subnet  192.168.1.0/24 
+759aab80ffed0b220a786ffe5b6f0b2cfd96c33bd9deb6685834ee4003a45bf4
+[test@ip-172-31-93-168 project-website-template]$ docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+6fdfd992d922   ashubr1   bridge    local
+759aab80ffed   ashubr2   bridge    local
+f78361292230   bridge    bridge    local
+8731d1a03487   host      host      local
+1413ba13fd3d   none      null      local
+
+```
+
+### name based commnication 
+
+```
+ docker run -tid  --name x1br1  --network  ashubr1  alpine 
+4c23f350799581f9233d3b3ff0a9240d9b62967600a4c520db2f592fb280543c
+[test@ip-172-31-93-168 project-website-template]$ 
+[test@ip-172-31-93-168 project-website-template]$ docker run -tid  --name x2br1  --network  ashubr1  alpine 
+8a6e956c4292012409092f41d75dd4c6f713c9147440fda398ebe72c3a70a497
+[test@ip-172-31-93-168 project-website-template]$ 
+[test@ip-172-31-93-168 project-website-template]$ docker  exec -it x1br1 sh 
+/ # ping x2br1
+PING x2br1 (172.18.0.3): 56 data bytes
+64 bytes from 172.18.0.3: seq=0 ttl=255 time=0.109 ms
+64 bytes from 172.18.0.3: seq=1 ttl=255 time=0.099 ms
+^C
+--- x2br1 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.099/0.104/0.109 ms
+/ # exit
+
+```
+
+### static ip to container 
+
+```
+docker run -tid  --name x2br2  --network  ashubr2 --ip  192.168.1.100  alpine 
+261fb0a9ce7a1d5a190c7585068d602648d9c99f4bc43a4d3586b3bc72e61020
+[test@ip-172-31-93-168 project-website-template]$ 
+[test@ip-172-31-93-168 project-website-template]$ 
+[test@ip-172-31-93-168 project-website-template]$ docker  exec -it x2br2 sh 
+/ # ifconfig 
+eth0      Link encap:Ethernet  HWaddr 02:42:C0:A8:01:64  
+          inet addr:192.168.1.100  Bcast:192.168.1.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:10 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:860 (860.0 B)  TX bytes:0 (0.0 B)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+/ # exit
+
+```
+
