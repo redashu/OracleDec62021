@@ -513,4 +513,89 @@ lo        Link encap:Local Loopback
 / # exit
 
 ```
+### Docker Storage 
+
+<img src="st.png">
+
+### creating a database volume 
+
+```
+docker  volume  create  ashudb 
+ashudb
+[test@ip-172-31-93-168 project-website-template]$ docker  volume  ls
+DRIVER    VOLUME NAME
+local     06a13f95ddf2ab1c147b0ff1587559b7352cd720285cb5b3bb4644e18766b58a
+local     38fcc6ffbd60ff10c803a2c835e982d1344214cdc1f514aad75dca40c9b3cbff
+local     ashudb
+local     d1e7c70ff62556f16df603495de2d60045e2656d87c783bdebac7714ed533de8
+[test@ip-172-31-93-168 project-website-template]$ docker  volume   inspect  ashudb 
+[
+    {
+        "CreatedAt": "2021-12-07T11:07:00Z",
+        "Driver": "local",
+        "Labels": {},
+        "Mountpoint": "/var/lib/docker/volumes/ashudb/_data",
+        "Name": "ashudb",
+        "Options": {},
+        "Scope": "local"
+    }
+]
+[test@ip-172-31-93-168 project-website-template]$ 
+
+```
+
+### creating database mysql container 
+
+```
+ 1058  docker  run -d --name ashudb1 -v ashudb:/var/lib/mysql  -e MYSQL_ROOT_PASSWORD=Oracle088#  mysql
+ 1059  history 
+[test@ip-172-31-93-168 project-website-template]$ docker rm  ashudb -f
+ashudb
+[test@ip-172-31-93-168 project-website-template]$ docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED              STATUS              PORTS                 NAMES
+d595bbc18eb9   mysql     "docker-entrypoint.s…"   20 seconds ago       Up 19 seconds       3306/tcp, 33060/tcp   snehadb
+7ad24ef53c41   mysql     "docker-entrypoint.s…"   37 seconds ago       Up 36 seconds       3306/tcp, 33060/tcp   rahuldb
+f3b2ee09c962   mysql     "docker-entrypoint.s…"   About a minute ago   Up About a minute   3306/tcp, 33060/tcp   ashudb1
+284c330a3cbd   alpine    "ping localhost"         3 minutes ago        Up 3 minutes                              aishbrx2
+[test@ip-172-31-93-168 project-website-template]$ docker  logs ashudb1
+2021-12-07 11:09:28+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.27-1debian10 started.
+2021-12-07 11:09:28+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2021-12-07 11:09:28+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.27-1debian10 started.
+2021-12-07 11:09:28+00:00 [Note] [Entrypoint]: Initializing database files
+2021-12-07T11:09:28.494050Z 0 [System] [MY-013169] [Server] /usr/sbin/mysqld (mysqld 8.0.27) initializing of server in progress as process 43
+
+```
+
+### login to database container 
+
+```
+docker  exec -it ashudb1 bash 
+root@f3b2ee09c962:/# cat  /etc/os-release 
+PRETTY_NAME="Debian GNU/Linux 10 (buster)"
+NAME="Debian GNU/Linux"
+VERSION_ID="10"
+VERSION="10 (buster)"
+VERSION_CODENAME=buster
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+root@f3b2ee09c962:/# mysql -u root -p 
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.27 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2021, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> 
+
+```
+
 
