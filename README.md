@@ -448,6 +448,135 @@ node2           Ready      <none>                 7d14h   v1.22.4   172.31.66.12
 
 <img src="pod.png">
 
+### k8s cluster setup methods 
+
+<img src="setup.png">
+
+### things to be performed in all nodes 
+
+```
+ hostnamectl set-hostname  masternode
+[root@ip-172-31-70-32 ~]# logout
+[ec2-user@ip-172-31-70-32 ~]$ sudo -i
+[root@masternode ~]# 
+[root@masternode ~]# 
+[root@masternode ~]# vim setup.sh
+[root@masternode ~]# cat setup.sh 
+modprobe br_netfilter
+echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
+
+cat  <<EOF  >/etc/yum.repos.d/kube.repo
+[kube]
+baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+gpgcheck=0
+EOF
+
+
+yum  install  docker kubeadm  -y
+
+cat  <<X  >/etc/docker/daemon.json
+{
+  "exec-opts": ["native.cgroupdriver=systemd"]
+}
+
+X
+
+systemctl enable --now  docker kubelet
+[root@masternode ~]# 
+
+```
+
+### oNly in Master node
+
+```
+kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=0.0.0.0   --apiserver-cert-extra-sans=34.231.124.102
+
+```
+
+### pod first yaml 
+
+```
+apiVersion: v1 # master apiversion for pod operations 
+kind: Pod
+metadata: # info about POD 
+ name: ashupod-1 
+spec: # app info like container  , volume ,secuirty , network 
+ containers: 
+ - image: alpine # image will be pulled from docker HUb 
+   name: ashuc1 # name of container 
+   command: ['sh','-c','ping google.com'] # default process for contianer 1st 
+   
+```
+
+### Deploy yaml 
+
+```
+kubectl apply -f  pod1.yaml 
+pod/ashupod-1 created
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl get po 
+NAME        READY   STATUS    RESTARTS   AGE
+ashupod-1   1/1     Running   0          10s
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl get pods
+NAME        READY   STATUS    RESTARTS   AGE
+ashupod-1   1/1     Running   0          13s
+
+```
+
+### kube schedular is managing pod scheduling 
+
+<img src="sche.png">
+
+###
+
+```
+kubectl get po ashupod-1  -o wide
+NAME        READY   STATUS    RESTARTS   AGE     IP             NODE      NOMINATED NODE   READINESS GATES
+ashupod-1   1/1     Running   0          5m20s   192.168.34.1   minion1   <none>           <none>
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl get po  -o wide          
+NAME           READY   STATUS    RESTARTS   AGE     IP                NODE      NOMINATED NODE   READINESS GATES
+aishpod-1      1/1     Running   0          2m42s   192.168.179.199   minion2   <none>           <none>
+ashupod-1      1/1     Running   0          5m27s   192.168.34.1      minion1   <none>           <none>
+chetabpod-1    1/1     Running   0          117s    192.168.34.8      minion1   <none>           <none>
+harikapod-1    1/1     Running   0          5m5s    192.168.34.4      minion1   <none>           <none>
+juhipod-1      1/1     Running   0          5m8s    192.168.34.3      minion1   <none>           <none>
+prabhatpod-1   1/1     Running   0          4m40s   192.168.34.6    
+
+```
+
+### checking logs of container inside pod 
+
+```
+kubectl logs -f  ashupod-1
+PING google.com (172.217.164.142): 56 data bytes
+64 bytes from 172.217.164.142: seq=0 ttl=53 time=0.741 ms
+64 bytes from 172.217.164.142: seq=1 ttl=53 time=0.772 ms
+64 bytes from 172.217.164.142: seq=2 ttl=53 time=0.735 ms
+64 bytes from 172.217.164.142: seq=3 ttl=53 time=0.763 ms
+64 bytes from 172.217.164.142: seq=4 ttl=53 time=0.753 ms
+64 bytes from 172.217.164.142: seq=5 ttl=53 time=0.740 ms
+
+```
+
+### accessing container inside pod 
+
+```
+kubectl exec -it  ashupod-1  -- sh
+/ # 
+/ # cat /etc/os-release 
+NAME="Alpine Linux"
+ID=alpine
+VERSION_ID=3.15.0
+PRETTY_NAME="Alpine Linux v3.15"
+HOME_URL="https://alpinelinux.org/"
+BUG_REPORT_URL="https://bugs.alpinelinux.org/"
+/ # ps -e
+PID   USER     TIME  COMMAND
+    1 root      0:00 ping google.com
+    7 root      0:00 sh
+   16 root      0:00 ps -e
+/ # exit
+
+```
 
 
 
