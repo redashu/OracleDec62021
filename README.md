@@ -380,5 +380,75 @@ Step 3/6 : RUN mkdir oracle
 
 <img src="master.png">
 
+### master node - kube-apiserver 
+
+<img src="apiserver.png">
+
+### Location of auth token file in cluster side 
+
+```
+ cd /etc/kubernetes/
+[root@control-plane kubernetes]# ls
+admin.conf 
+
+```
+
+### from k8s client connecting to cluster 
+
+```
+kubectl  cluster-info   --kubeconfig  admin.conf.txt 
+Kubernetes control plane is running at https://35.169.179.204:6443
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+ fire@ashutoshhs-MacBook-Air  ~/Desktop  
+ fire@ashutoshhs-MacBook-Air  ~/Desktop  
+ fire@ashutoshhs-MacBook-Air  ~/Desktop  kubectl get  nodes   --kubeconfig  admin.conf.txt 
+NAME            STATUS     ROLES                  AGE     VERSION
+control-plane   Ready      control-plane,master   7d14h   v1.22.4
+node1           NotReady   <none>                 7d14h   v1.22.4
+node2           Ready      <none>                 7d14h   v1.22.4
+
+```
+
+### COpy kubeconfig file to location 
+
+```
+cp  admin.conf.txt  ~/.kube/config 
+ fire@ashutoshhs-MacBook-Air  ~/Desktop  
+ fire@ashutoshhs-MacBook-Air  ~/Desktop  kubectl  get  nodes
+NAME            STATUS     ROLES                  AGE     VERSION
+control-plane   Ready      control-plane,master   7d14h   v1.22.4
+node1           NotReady   <none>                 7d14h   v1.22.4
+node2           Ready      <none>                 7d14h   v1.22.4
+
+
+```
+
+### ETcd as brain of k8s cluster 
+
+<img src="etcd.png">
+
+### more detail info 
+
+```
+kubectl get nodes -o wide
+NAME            STATUS     ROLES                  AGE     VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE         KERNEL-VERSION                  CONTAINER-RUNTIME
+control-plane   Ready      control-plane,master   7d14h   v1.22.4   172.31.66.83    <none>        Amazon Linux 2   4.14.252-195.483.amzn2.x86_64   docker://20.10.7
+node1           NotReady   <none>                 7d14h   v1.22.4   172.31.74.154   <none>        Amazon Linux 2   4.14.252-195.483.amzn2.x86_64   docker://20.10.7
+node2           Ready      <none>                 7d14h   v1.22.4   172.31.66.124   <none>        Amazon Linux 2   4.14.252-195.483.amzn2.x86_64   docker://20.10.7
+
+
+```
+
+### k8s app deployment 
+
+<img src="appdep.png">
+
+### k8s app deploy and Intro to POD 
+
+<img src="pod.png">
+
+
+
 
 
