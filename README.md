@@ -363,5 +363,22 @@ Step 3/6 : RUN mkdir oracle
  
  ```
  
- 
+### container / docker engine  problem statemnet 
+
+<img src="prob.png">
+
+## SOlution to container deploy replated problems 
+
+<img src="solution.png">
+
+### k8s architecture planning 
+
+<img src="infra.png">
+
+
+### K8s Understanding part 1  
+
+<img src="master.png">
+
+
 
