@@ -289,4 +289,66 @@ No resources found in ashu-space namespace.
  
  ```
  
+ ### react / node app to DOcker 
+ 
+ ```
+docker  build -t  dockerashu/oraclenode:v1 https://github.com/redashu/Nodejs.git 
+[+] Building 5.9s (1/2)                                                                                                            
+ => [internal] load git source https://github.com/redashu/Nodejs.git                                                          5.5s
+ => [internal] load metadata for docker.io/library/ubuntu:latest                                                              0.1s 
+                                                                                                                                   
+                                                                                                                                   
+```
+
+###  POD networking 
+
+<img src="cni.png">
+
+### CNI bridge 
+
+<img src="cnibr.png">
+
+### yaml for react app 
+
+```
+kubectl  run  nodeapp --image=dockerashu/oraclenode:v1  --port 3000 --dry-run=client  -o yaml  >reactapp.yaml
+
+```
+
+### Deploy app 
+
+```
+kubectl apply -f  reactapp.yaml 
+pod/nodeapp created
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  get po -w
+NAME      READY   STATUS    RESTARTS   AGE
+nodeapp   1/1     Running   0          6s
+
+```
+
+### from k8s client we can accesss this app 
+
+```
+kubectl get po
+NAME      READY   STATUS    RESTARTS   AGE
+nodeapp   1/1     Running   0          4m38s
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  port-forward  nodeapp  1122:3000 
+Forwarding from 127.0.0.1:1122 -> 3000
+Forwarding from [::1]:1122 -> 3000
+Handling connection for 1122
+Handling connection for 1122
+Handling connection for 1122
+
+```
+
+### port forwarding working 
+
+<img src="portf.png">
+
+
+                                                                                                                                   
+                                                                                                                                   
+
+ 
+ 
  
