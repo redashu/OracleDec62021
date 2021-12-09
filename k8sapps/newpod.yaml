@@ -1,0 +1,9 @@
+apiVersion: v1 # apiversion running on master node related to POD request 
+kind: Pod
+metadata: # info about Kind {Pod}
+ name: ashupodx1 # name of Kind {POd}
+spec: # is about application info like container / storage / security -etc
+ containers: # one or more containers 
+ - name: ashuc1
+   image: alpine # image field can be changed in existing pod 
+   command: ['sh','-c','ping google.com'] # can't change this field 
