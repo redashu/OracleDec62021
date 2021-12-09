@@ -539,3 +539,99 @@ service/ashusvc1   NodePort   10.107.186.110   <none>        1234:30521/TCP   7s
 
 ```
 
+### K8s yaml question 
+
+```
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: ashutoshhk8s1
+spec: {}
+status: {}
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: mypod1
+  name: mypod1
+  namespace: ashutoshhk8s1
+spec:
+  containers:
+  - command:
+    - sleep
+    - "120000"
+    image: ubuntu
+    name: mypod1
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashutoshhsvc1
+  name: ashutoshhsvc1
+  namespace: ashutoshhk8s1
+spec:
+  ports:
+  - name: 1234-80
+    port: 1234
+    protocol: TCP
+    targetPort: 80
+    nodePort: 31000 # static Nodeport selection 
+  selector:
+    app: ashutoshhsvc1
+  type: NodePort
+status:
+  loadBalancer: {}
+
+```
+
+### Task command history 
+
+```
+8041  kubectl  create namespace  ashutoshhk8s1  --dry-run=client -o yaml 
+ 8042  kubectl  run  mypod1 --image=ubuntu --command sleep 120000  --namespace=ashutoshhk8s1   --dry-run=client -o yaml 
+ 8043  kubectl create service nodeport  ashutoshhsvc1 --tcp 1234:80 --namespace=ashutoshhk8s1   --dry-run=client -o yaml 
+ 8044  kubectl apply -f mytask.yaml
+ 8045  kubectl  get po,svc  -n ashutoshhk8s1 
+ 8046  ls
+ 8047  kubectl -n ashutoshhk8s1  cp  autogen.yaml mypod1:/tmp/
+ 8048  kubectl -n ashutoshhk8s1 exec -it   mypod1 --  bash 
+ 
+```
+
+### pushing image to OCR 
+
+```
+docker  tag  c059bfaa849c   phx.ocir.io/axmbtg8judkl/myalpine:v1 
+ fire@ashutoshhs-MacBook-Air  ~  
+ fire@ashutoshhs-MacBook-Air  ~  docker login phx.ocir.io  
+Authenticating with existing credentials...
+Login did not succeed, error: Error response from daemon: Get "https://phx.ocir.io/v2/": unknown: Unauthorized
+Username (axmbtg8judkl/learntechbyme@gmail.com): 
+Password: 
+ ✘ fire@ashutoshhs-MacBook-Air  ~  docker logout phx.ocir.io  
+Removing login credentials for phx.ocir.io
+ fire@ashutoshhs-MacBook-Air  ~  
+ fire@ashutoshhs-MacBook-Air  ~  docker login phx.ocir.io   
+Username: axmbtg8judkl/learntechbyme@gmail.com
+Password: 
+Login Succeeded
+ fire@ashutoshhs-MacBook-Air  ~  docker push  phx.ocir.io/axmbtg8judkl/myalpine:v1
+The push refers to repository [phx.ocir.io/axmbtg8judkl/myalpine]
+8d3ac3489996: Pushed 
+v1: digest: sha256:e7d88de73db3d3fd9b2d63aa7f447a10fd0220b7cbf39803c803f2af9ba256b3 size: 528
+
+```
+
+
+
