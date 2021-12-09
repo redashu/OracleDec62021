@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels: # for label of pod 
+    x: helloashutoshh1 # key and value 
+  name: nodeapp # name of pod
+spec:
+  containers:
+  - image: dockerashu/oraclenode:v1
+    name: nodeapp
+    ports: # app port which is running inside container 
+    - containerPort: 3000
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+# now below this you can have svc yaml 
+---
+apiVersion: v1
+kind: Service # Kind service for Internal LB creation 
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashusvc1
+  name: ashusvc1 # name of service 
+spec:
+  ports:
+  - name: 1234-3000
+    port: 1234 # service port number 
+    protocol: TCP
+    targetPort: 3000 # app port where service will forward request
+  selector: # Pod FInder using label of pod 
+    x: helloashutoshh1 # label of pod 
+  type: NodePort # type of service 
+status:
+  loadBalancer: {}
+ 
+
+

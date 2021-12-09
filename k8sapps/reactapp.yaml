@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels: # for label of pod 
+    x: helloashutoshh1 # key and value 
+  name: nodeapp # name of pod
+spec:
+  containers:
+  - image: dockerashu/oraclenode:v1
+    name: nodeapp
+    ports: # app port which is running inside container 
+    - containerPort: 3000
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
