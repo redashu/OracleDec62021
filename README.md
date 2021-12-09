@@ -345,10 +345,197 @@ Handling connection for 1122
 
 <img src="portf.png">
 
+### service intro to k8s 
+
+<img src="svc.png">
+
+### service / Internal LB will be created in every minion Node -- independent of any app 
+
+<img src="lb.png">
+
+###  service type in k8s
+
+<img src="stype.png">
+
+### NodePort service in k8s
+
+<img src="np.png">
+
+### service find pod using labels
+
+<img src="label.png">
+
+### checking pod labels 
+
+```
+kubectl apply -f reactapp.yaml 
+pod/nodeapp configured
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl get po
+NAME      READY   STATUS    RESTARTS   AGE
+nodeapp   1/1     Running   0          176m
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl get po --show-labels
+NAME      READY   STATUS    RESTARTS   AGE    LABELS
+nodeapp   1/1     Running   0          176m   x=helloashutoshh
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  
+```
+
+## Nodeport service 
+
+### creating np 
+
+```
+kubectl  create  service 
+Create a service using a specified subcommand.
+
+Aliases:
+service, svc
+
+Available Commands:
+  clusterip    Create a ClusterIP service
+  externalname Create an ExternalName service
+  loadbalancer Create a LoadBalancer service
+  nodeport     Create a NodePort service
+
+
+
+```
+
+### 
+
+```
+kubectl  create  service nodeport  ashusvc1  --tcp 1234:3000  --dry-run=client -o yaml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashusvc1
+  name: ashusvc1
+spec:
+  ports:
+  - name: 1234-3000
+    port: 1234
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: ashusvc1
+  type: NodePort
+status:
+  loadBalancer: {}
+
+
+kubectl  create  service nodeport  ashusvc1  --tcp 1234:3000  --dry-run=client -o yaml   >nodesvc.yaml
+
+```
+
+### serivce with selector field 
+
+```
+apiVersion: v1
+kind: Service # Kind service for Internal LB creation 
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashusvc1
+  name: ashusvc1 # name of service 
+spec:
+  ports:
+  - name: 1234-3000
+    port: 1234 # service port number 
+    protocol: TCP
+    targetPort: 3000 # app port where service will forward request
+  selector: # Pod FInder using label of pod 
+    x: helloashutoshh # label of pod 
+  type: NodePort # type of service 
+status:
+  loadBalancer: {}
+
+
+```
+### deploy service 
+
+```
+kubectl apply -f nodesvc.yaml 
+service/ashusvc1 created
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  get service 
+NAME       TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+ashusvc1   NodePort   10.101.229.41   <none>        1234:31168/TCP   32s
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  
+
+```
+
+### deleting service and pod 
+
+```
+kubectl delete  svc,pod  --all
+service "ashusvc1" deleted
+pod "nodeapp" deleted
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  
+ 
+```
+
+### merging yaml 
+
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels: # for label of pod 
+    x: helloashutoshh1 # key and value 
+  name: nodeapp # name of pod
+spec:
+  containers:
+  - image: dockerashu/oraclenode:v1
+    name: nodeapp
+    ports: # app port which is running inside container 
+    - containerPort: 3000
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+# now below this you can have svc yaml 
+---
+apiVersion: v1
+kind: Service # Kind service for Internal LB creation 
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashusvc1
+  name: ashusvc1 # name of service 
+spec:
+  ports:
+  - name: 1234-3000
+    port: 1234 # service port number 
+    protocol: TCP
+    targetPort: 3000 # app port where service will forward request
+  selector: # Pod FInder using label of pod 
+    x: helloashutoshh1 # label of pod 
+  type: NodePort # type of service 
+status:
+  loadBalancer: {}
+ 
+
 
                                                                                                                                    
                                                                                                                                    
+```
+ 
+ 
+ 
+### deploy 
 
- 
- 
- 
+```
+kubectl apply -f ashunodeapp.yaml 
+pod/nodeapp created
+service/ashusvc1 created
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl get  po,svc
+NAME          READY   STATUS    RESTARTS   AGE
+pod/nodeapp   1/1     Running   0          7s
+
+NAME               TYPE       CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+service/ashusvc1   NodePort   10.107.186.110   <none>        1234:30521/TCP   7s
+
+```
+
