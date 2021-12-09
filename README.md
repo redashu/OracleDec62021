@@ -122,4 +122,171 @@ PID   USER     TIME  COMMAND
 / # exit
 
 ```
+### Generate YAML /JSON for POD 
 
+```
+kubectl  run  ashupod111  --image=alpine  --command ping fb.com  --dry-run=client       -o  yaml 
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ashupod111
+  name: ashupod111
+spec:
+  containers:
+  - command:
+    - ping
+    - fb.com
+    image: alpine
+    name: ashupod111
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+
+```
+
+### JSOn format 
+
+```
+kubectl  run  ashupod111  --image=alpine  --command ping fb.com  --dry-run=client       -o json
+```
+
+### store output in a file 
+
+```
+kubectl  run  ashupod111  --image=alpine  --command ping fb.com  --dry-run=client       -o  yaml  >autogen.yaml
+```
+
+### apply and delete using json 
+
+```
+kubectl apply -f autogen.json 
+pod/ashupod111 created
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  get po
+NAME          READY   STATUS              RESTARTS   AGE
+ashupod111    1/1     Running             0          6s
+sunilpod111   0/1     ContainerCreating   0          1s
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl delete  -f autogen.json
+pod "ashupod111" deleted
+
+```
+
+### Namespace in k8s for user/customer/admin/dev /devops  space 
+
+<img src="ns.png">
+
+### k8s internal components 
+
+```
+ubectl  get namespaces 
+NAME                   STATUS   AGE
+default                Active   18h
+ingress-nginx          Active   17h
+kube-node-lease        Active   18h
+kube-public            Active   18h
+kube-system            Active   18h
+kubernetes-dashboard   Active   17h
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  get pods -n  kube-system
+NAME                                       READY   STATUS    RESTARTS      AGE
+calico-kube-controllers-647d84984b-p4ks5   1/1     Running   2 (16h ago)   18h
+calico-node-gh7c7                          1/1     Running   2 (16h ago)   18h
+calico-node-shhgl                          1/1     Running   2 (16h ago)   18h
+calico-node-v72vl                          1/1     Running   2 (16h ago)   18h
+coredns-64897985d-g5w7b                    1/1     Running   2 (16h ago)
+
+```
+
+### creating namespaces 
+
+```
+kubectl  create  namespace  ashu-space --dry-run=client  -o yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: ashu-space
+spec: {}
+status: {}
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  create  namespace  ashu-space                namespace/ashu-space created
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  get ns                  NAME                   STATUS   AGE
+ashu-space             Active   8s
+default                Active   18h
+
+```
+
+### Deploy pod in custom namespace 
+
+```
+kubectl apply -f autogen.yaml -n  ashu-space 
+pod/ashupod111 created
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl get pods
+No resources found in default namespace.
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl get pods -n  ashu-space 
+NAME         READY   STATUS    RESTARTS   AGE
+ashupod111   1/1     Running   0          11s
+
+```
+
+### 
+
+```
+kubectl get pods -n  ashu-space 
+NAME         READY   STATUS    RESTARTS   AGE
+ashupod111   1/1     Running   0          11s
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  -n  ashu-space  get  pods
+NAME         READY   STATUS    RESTARTS   AGE
+ashupod111   1/1     Running   0          57s
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  -n  ashu-space  delete   pods  ashupod111
+pod "ashupod111" deleted
+
+
+```
+
+### Namespace in yaml file
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: ashu-space # info about Namespace 
+  creationTimestamp: null
+  labels:
+    run: ashupod111
+  name: ashupod111 # name of pod 
+spec:
+  containers:
+  - command: # process of container 
+    - ping
+    - fb.com
+    image: alpine # image name 
+    name: ashupod111 # container name 
+    resources: {} # for cgroups 
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always # restart policy 
+status: {}
+
+
+```
+
+### to set default namespace in client side
+
+```
+
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  config set-context  --current --namespace=ashu-space 
+Context "kubernetes-admin@kubernetes" modified.
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  config get-contexts
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   ashu-space
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  get  pods
+No resources found in ashu-space namespace.
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  
+ 
+ 
+ ```
+ 
+ 
