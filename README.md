@@ -252,3 +252,51 @@ ashuweb-56bdd5497f-v9rfp   1/1     Running   0          82s
 
 ```
 
+### kubernetes dashboard 
+
+```
+kubectl  get  deploy -n kubernetes-dashboard 
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+dashboard-metrics-scraper   1/1     1            1           42h
+kubernetes-dashboard        1/1     1            1           42h
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  get  po  -n kubernetes-dashboard 
+NAME                                         READY   STATUS    RESTARTS      AGE
+dashboard-metrics-scraper-799d786dbf-lfxrm   1/1     Running   2 (19h ago)   42h
+kubernetes-dashboard-7bd6db5bcc-2kvx8        1/1     Running   2 (19h ago)   42h
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  get  svc  -n kubernetes-dashboard 
+NAME                        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)         AGE
+dashboard-metrics-scraper   ClusterIP   10.103.199.194   <none>        8000/TCP        42h
+kubernetes-dashboard        NodePort    10.111.139.124   <none>        443:30968/TCP   42h
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  get  secret   -n kubernetes-dashboard 
+NAME                               TYPE                                  DATA   AGE
+default-token-b68l7                kubernetes.io/service-account-token   3      42h
+kubernetes-dashboard-certs         Opaque                                0      42h
+kubernetes-dashboard-csrf          Opaque                                1      42h
+kubernetes-dashboard-key-holder    Opaque                                2      42h
+kubernetes-dashboard-token-l4pxt   kubernetes.io/service-account-token   3      42h
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  describe  secret   kubernetes-dashboard-token-l4pxt   -n kubernetes-dashboard
+Name:         kubernetes-dashboard-token-l4pxt
+Namespace:    kubernetes-dashboard
+Labels:       <none>
+Annotations:  kubernetes.io/service-account.name: kubernetes-dashboard
+              kubernetes.io/service-account.uid: 958ff45d-2d89-43fe-aa20-3266c853c87d
+
+Type:  kubernetes.io/service-account-token
+
+Data
+====
+ca.crt:     1099 bytes
+namespace:  20 bytes
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6ImZ4MTBRRU0teUxwRVNPdEpaR2o1TTFCQTdPUlFHRDZfV2ZEMWFyR2FiMlUifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2
+
+
+```
+
+
+### give access to dashboard 
+
+```
+kubectl  create  clusterrolebinding  security  --clusterrole=cluster-admin   --serviceaccount=kubernetes-dashboard:kubernetes-dashboard
+
+```
+
