@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: mydep1
+  name: mydep1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mydep1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mydep1
+    spec:
+      containers:
+      - image: mysql:5.6
+      
+        name: mysql
+        ports:
+        - containerPort: 3306 
+        env: # set root password 
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom: # calling value from Secret 
+           secretKeyRef: 
+            name: ashudbsec
+            key: key1 
+        resources: {}
+status: {}

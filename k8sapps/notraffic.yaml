@@ -1,0 +1,9 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+ name: ashupolicy
+spec:
+ podSelector: {} # selecting all pods 
+ policyTypes:
+ - Ingress # all incoming 
+ - Egress # all outgoing 
