@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: ashuweb
+  name: ashuweb # name of deployment  
+spec:
+  replicas: 1 # number of pod 
+  selector:
+    matchLabels:
+      app: ashuweb
+  strategy: {}
+  template: # like RC we have template section 
+    metadata:
+      creationTimestamp: null
+      labels: # label of pods
+        app: ashuweb
+    spec:
+      containers:
+      - image: dockerashu/oracleweb:v1111
+        name: oracleweb
+        resources: # resource limits 
+         requests:
+          cpu: 100m  # 1 vcpu core == 1000 Mili core 
+          memory: 200M
+         limits:
+          cpu: 500m
+          memory:  700M 
+
+status: {}
