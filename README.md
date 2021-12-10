@@ -300,3 +300,63 @@ kubectl  create  clusterrolebinding  security  --clusterrole=cluster-admin   --s
 
 ```
 
+### DB deployment 
+
+```
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: mydep1
+  name: mydep1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mydep1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mydep1
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        ports:
+        - containerPort: 3306 
+        env: # set root password 
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom: # calling value from Secret 
+           secretKeyRef: 
+            name: ashudbsec
+            key: key1 
+        resources: {}
+status: {}
+
+
+```
+
+### commands 
+
+```
+kubectl  create  secret   generic  ashudbsec  --from-literal  key1=Oracledb088#
+secret/ashudbsec created
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl apply -f taskdep.yaml 
+deployment.apps/mydep1 created
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  get  deploy
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+mydep1   1/1     1            1           5s
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  get  po    
+NAME                      READY   STATUS    RESTARTS   AGE
+mydep1-75c5d97876-d969b   1/1     Running   0          9s
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl expose deploy mydep1  --port 3306  --name ashutoshhsvc  
+service/ashutoshhsvc exposed
+ fire@ashutoshhs-MacBook-Air  ~/Desktop/k8sapps  kubectl  get  svc 
+NAME           TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+ashutoshhsvc   ClusterIP   10.102.94.176   <none>        3306/TCP   6s
+```
+
