@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+ name: ashurc-1 
+spec:
+ replicas: 1 # number of pod we want 
+ template: # rc will be using template to create PODs 
+  metadata:
+   labels: # label of pod 
+    x: helloashutoshh1
+  spec:
+   containers:
+   - image: dockerashu/oraclenode:v1
+     name: ashuc1 
+     ports:
+     - containerPort: 3000

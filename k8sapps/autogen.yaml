@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: ashu-space # info about Namespace 
+  creationTimestamp: null
+  labels:
+    run: ashupod111
+  name: ashupod111 # name of pod 
+spec:
+  containers:
+  - command: # process of container 
+    - ping
+    - fb.com
+    image: alpine # image name 
+    name: ashupod111 # container name 
+    resources: {} # for cgroups 
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always # restart policy 
+status: {}

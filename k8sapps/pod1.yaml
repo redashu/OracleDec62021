@@ -1,0 +1,9 @@
+apiVersion: v1 # master apiversion for pod operations 
+kind: Pod
+metadata: # info about POD 
+ name: ashupod-1 
+spec: # app info like container  , volume ,secuirty , network 
+ containers: 
+ - image: alpine # image will be pulled from docker HUb 
+   name: ashuc1 # name of container 
+   command: ['sh','-c','ping google.com'] # default process for contianer 1st 
